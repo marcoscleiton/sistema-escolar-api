@@ -12,7 +12,6 @@ async function listarTurmas(req, res) {
         res.status(500).json({erro: "Erro ao tentar listar turmas"});
     }
 }
-export {listarTurmas};
 
 async function buscarTurma(req, res) {
     try {
@@ -32,7 +31,6 @@ async function buscarTurma(req, res) {
         res.status(500).json({erro: "Erro ao tentar buscar turma"});
     }
 }
-export {buscarTurma}
 
 async function adicionarTurma(req, res) {
     try {
@@ -49,7 +47,6 @@ async function adicionarTurma(req, res) {
         res.status(500).json({erro: "Erro ao tentar adicionar turma."});
     }
 }
-export {adicionarTurma}
 
 //Revisar delete
 async function deletarTurma(req, res) {
@@ -101,4 +98,31 @@ async function atualizarTurmas(req, res) {
     }
 }
 
-export {listarTurmas, buscarTurma, adicionarTurma, deletarTurma, atualizarTurmas};
+async function listarAlunosDaTurma(req, res) {
+    try {
+        const {id} = req.params;
+
+        // primeiro verifica se a turma existe
+        const turma = await pool.query(
+            "SELECT * FROM turmas WHERE id = $1",
+            [id]
+        );
+
+        if (turma.rows.length === 0) {
+            return res.status(404).json({message: "Turma inexistente"});
+        }
+
+        // se existe, busca os alunos dela
+        const resultado = await pool.query(
+            "SELECT alunos.id, alunos.nome, turmas.nome AS nome_turma FROM alunos JOIN turmas ON alunos.turma_id = turmas.id WHERE turmas.id = $1",
+            [id]
+        );
+
+        res.json(resultado.rows);
+
+    } catch (error) {
+        res.status(500).json({error: "Erro ao tentar listar alunos da turma"});
+    }
+}
+
+export {listarTurmas, buscarTurma, adicionarTurma, deletarTurma, atualizarTurmas, listarAlunosDaTurma};
