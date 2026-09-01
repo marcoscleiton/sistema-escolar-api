@@ -1,18 +1,24 @@
-import {json} from "express";
-import pool from "../db/connection";
+
+import pool from "../db/connection.js";
 
 const listarProfessores = async (req, res) => {
     try {
-        
-        const resultado = await pool.query(
-            "SELECT * FROM professores"
-        );
+    const {nome} = req.query;
 
-        res.json(resultado.rows);
+    let resultado;
 
-    } catch (error) {
-        res.status(500).json({error: "Erro ao tentar listar professores"});
+    if (nome) {
+        resultado = await pool.query("SELECT * FROM professores WHERE nome ILIKE $1",
+            [`%${nome}%`]
+        )
+    } else {
+        resultado = await pool.query("SELECT * FROM professores")
+    }
+
+    res.json(resultado.rows);
+   
+        } catch (error) {
+            res.status(500).json({error: "Erro ao tentar listar professor"})
     }
 }
-
 export {listarProfessores}
