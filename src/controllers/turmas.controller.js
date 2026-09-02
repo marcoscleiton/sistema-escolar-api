@@ -1,19 +1,17 @@
-import { json } from "express";
 import pool from "../db/connection.js";
 
-async function listarTurmas(req, res) {
+async function listarTurmas(req, res, next) {
     try {
         const resultado = await pool.query("SELECT * FROM turmas");
 
         res.json(resultado.rows);
 
     } catch (erro) {
-
-        res.status(500).json({erro: "Erro ao tentar listar turmas"});
+        next(erro);
     }
 }
 
-async function buscarTurma(req, res) {
+async function buscarTurma(req, res, next) {
     try {
         const {id} = req.params;
 
@@ -23,16 +21,15 @@ async function buscarTurma(req, res) {
         if (!resultado.rows[0]) {
             return res.status(404).json({erro: "Turma inexistente."});
         }
-        
-        res.json(resultado.rows[0]);
-        
 
-    } catch (erro) {    
-        res.status(500).json({erro: "Erro ao tentar buscar turma"});
+        res.json(resultado.rows[0]);
+
+    } catch (erro) {
+        next(erro);
     }
 }
 
-async function adicionarTurma(req, res) {
+async function adicionarTurma(req, res, next) {
     try {
 
         const {nome} =  req.body;
@@ -44,12 +41,12 @@ async function adicionarTurma(req, res) {
         res.status(201).json(resultado.rows[0]);
 
     } catch (erro) {
-        res.status(500).json({erro: "Erro ao tentar adicionar turma."});
+        next(erro);
     }
 }
 
 //Revisar delete
-async function deletarTurma(req, res) {
+async function deletarTurma(req, res, next) {
     try {
         const { id } = req.params;
 
@@ -74,11 +71,11 @@ async function deletarTurma(req, res) {
         res.status(200).json({mensage: "Turma deletada com sucesso."});
 
     } catch (erro) {
-        res.status(500).json({erro: "Erro ao tentar deletar turma"});
+        next(erro);
     }
 }
 
-async function atualizarTurmas(req, res) {
+async function atualizarTurmas(req, res, next) {
     try {
 
     const {id} = req.params;
@@ -94,11 +91,11 @@ async function atualizarTurmas(req, res) {
         res.status(200).json({message: "Turma atualizada com sucesso."});
 
     } catch (erro) {
-        res.status(500).json({erro: "Erro ao tentar atualizar turma"});
+        next(erro);
     }
 }
 
-async function listarAlunosDaTurma(req, res) {
+async function listarAlunosDaTurma(req, res, next) {
     try {
         const {id} = req.params;
 
@@ -120,8 +117,8 @@ async function listarAlunosDaTurma(req, res) {
 
         res.json(resultado.rows);
 
-    } catch (error) {
-        res.status(500).json({error: "Erro ao tentar listar alunos da turma"});
+    } catch (erro) {
+        next(erro);
     }
 }
 

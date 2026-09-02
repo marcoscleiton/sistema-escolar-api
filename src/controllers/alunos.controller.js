@@ -1,55 +1,52 @@
 import pool from "../db/connection.js";
 
-async function listarAlunos (req, res) {
-    
+async function listarAlunos(req, res, next) {
+
     try {
-
         const resultado = await pool.query("SELECT * FROM alunos");
-
         res.json(resultado.rows);
 
     } catch (erro) {
-
-        res.status(500).json({erro: "Erro ao listar alunos"});
+        next(erro);
     }
 };
 
 
-async function buscarAluno(req, res) {
-    
+async function buscarAluno(req, res, next) {
+
     try {
         const aluno = req.params.id;
 
-        const resultado = await pool.query("SELECT * FROM alunos WHERE id = $1", 
+        const resultado = await pool.query("SELECT * FROM alunos WHERE id = $1",
             [aluno]
         );
 
         res.json(resultado.rows[0]);
 
     } catch (erro) {
-        res.status(500).json({erro: "Erro ao buscar aluno"});
+        next(erro);
     }
 };
 
 
-async function criarAluno(req, res) {
-    
+async function criarAluno(req, res, next) {
+
     try {
-    const {nome, data_nascimento, turma_id} = req.body;
+        const {nome, data_nascimento, turma_id} = req.body;
 
-    const resultado = await pool.query("INSERT INTO alunos (nome, data_nascimento, turma_id) VALUES ($1, $2, $3) RETURNING *",
-        [nome, data_nascimento, turma_id]
-    )
+        const resultado = await pool.query("INSERT INTO alunos (nome, data_nascimento, turma_id) VALUES ($1, $2, $3) RETURNING *",
+            [nome, data_nascimento, turma_id]
+        )
 
-    res.status(201).json(resultado.rows[0]);
+        res.status(201).json(resultado.rows[0]);
 
     } catch (erro) {
-        res.status(500).json({erro: "Erro ao registrar aluno"});
+        next(erro);
     }
 };
 
 
-async function atualizarAluno(req, res) {
+async function atualizarAluno(req, res, next) {
 
     try {
         const {id} = req.params;
@@ -62,23 +59,23 @@ async function atualizarAluno(req, res) {
         );
         res.json(resultado.rows[0]);
     } catch (erro) {
-        res.status(500).json({erro: "Erro ao tentar atualizar alunos"});
+        next(erro);
     }
 }
 
 
-async function deletarAluno(req, res) {
-    
+async function deletarAluno(req, res, next) {
+
     try {
         const {id} = req.params;
 
         await pool.query("DELETE FROM alunos WHERE id = $1",
             [id])
 
-            res.status(201).json("Aluno apagado com sucesso");
+        res.status(200).json({mensagem: "Aluno apagado com sucesso"});
 
     } catch (erro) {
-        res.status(204).send();
+        next(erro);
     }
 }
 
