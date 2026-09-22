@@ -1,5 +1,5 @@
 import express from "express";
-import {listarDisciplinas, listarDisciplinaPorId, adicionarDisciplina, atualizarDisciplina, deletarDisciplina} from "../controllers/disciplinas.controllers.js";
+import {listarDisciplinas, listarDisciplinaPorId, adicionarDisciplina, atualizarDisciplina, deletarDisciplina} from "../controllers/disciplinas.controller.js";
 
 const disciplinasRouter = express.Router();
 
