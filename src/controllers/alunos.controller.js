@@ -34,6 +34,9 @@ async function criarAluno(req, res, next) {
     try {
         const {nome, data_nascimento, turma_id} = req.body;
 
+        if (!nome && typeof nome !== "string") {
+
+        }
         const resultado = await pool.query("INSERT INTO alunos (nome, data_nascimento, turma_id) VALUES ($1, $2, $3) RETURNING *",
             [nome, data_nascimento, turma_id]
         )
