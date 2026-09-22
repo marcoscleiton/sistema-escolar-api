@@ -3,6 +3,7 @@ import alunosRouter from "./routes/alunos.routes.js";
 import turmasRouter from "./routes/turmas.routes.js";
 import professoresRouter from "./routes/professores.routes.js";
 import disciplinasRouter from "./routes/disciplinas.routes.js";
+import professoresDisciplinasRouter from "./routes/professoresDisciplinas.routes.js";
 import tratamentoDeErro from "./middlewares/tratamentoDeErros.js";
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(alunosRouter);
 app.use(turmasRouter);
 app.use(professoresRouter);
 app.use(disciplinasRouter);
+app.use(professoresDisciplinasRouter);
 app.use(tratamentoDeErro);
 
 app.listen(3000, function() {
