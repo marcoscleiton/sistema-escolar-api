@@ -6,6 +6,7 @@ import disciplinasRouter from "./routes/disciplinas.routes.js";
 import professoresDisciplinasRouter from "./routes/professoresDisciplinas.routes.js";
 import tratamentoDeErro from "./middlewares/tratamentoDeErros.js";
 import notasRouter from "./routes/notas.routes.js";
+import FrequenciasRouter from "./routes/frequencias.routes.js";
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(professoresRouter);
 app.use(disciplinasRouter);
 app.use(professoresDisciplinasRouter);
 app.use(notasRouter);
+app.use(FrequenciasRouter);
+
 app.use(tratamentoDeErro);
 
 app.listen(3000, function() {
