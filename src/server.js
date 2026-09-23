@@ -7,6 +7,7 @@ import professoresDisciplinasRouter from "./routes/professoresDisciplinas.routes
 import tratamentoDeErro from "./middlewares/tratamentoDeErros.js";
 import notasRouter from "./routes/notas.routes.js";
 import FrequenciasRouter from "./routes/frequencias.routes.js";
+import frequenciasRouter from "./routes/frequencias.routes.js";
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(professoresRouter);
 app.use(disciplinasRouter);
 app.use(professoresDisciplinasRouter);
 app.use(notasRouter);
-app.use(FrequenciasRouter);
+app.use(frequenciasRouter);
 
 app.use(tratamentoDeErro);
 
