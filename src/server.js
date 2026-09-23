@@ -6,7 +6,6 @@ import disciplinasRouter from "./routes/disciplinas.routes.js";
 import professoresDisciplinasRouter from "./routes/professoresDisciplinas.routes.js";
 import tratamentoDeErro from "./middlewares/tratamentoDeErros.js";
 import notasRouter from "./routes/notas.routes.js";
-import FrequenciasRouter from "./routes/frequencias.routes.js";
 import frequenciasRouter from "./routes/frequencias.routes.js";
 import boletimRouter from "./routes/boletim.routes.js";
 
