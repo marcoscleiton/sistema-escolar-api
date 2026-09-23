@@ -1,5 +1,5 @@
 import express from "express";
-import {listarNotas, adicionarNota, atualizarNota, deletarNota,} from "../controllers/notas.controller.js";
+import {listarNotas, adicionarNota, atualizarNota, deletarNota} from "../controllers/notas.controller.js";
 
 const notasRouter = express.Router();
 

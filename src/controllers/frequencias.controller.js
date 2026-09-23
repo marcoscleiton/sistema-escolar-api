@@ -1,31 +1,31 @@
 import { pool } from "../db/connection.js";
 
-export async function listarNotas(req, res, next) {
+export async function listarFrequencias(req, res, next) {
   try {
-    const { aluno_id, disciplina_id, bimestre } = req.query;
+    const { aluno_id, data, turma_id } = req.query;
 
     let query = `
-      SELECT notas.id, alunos.nome AS aluno, disciplinas.nome AS disciplina,
-             notas.bimestre, notas.prova_parcial, notas.prova_bimestral
-      FROM notas
-      JOIN alunos ON notas.aluno_id = alunos.id
-      JOIN disciplinas ON notas.disciplina_id = disciplinas.id
+      SELECT frequencias.id, alunos.nome AS aluno, frequencias.data, frequencias.presente
+      FROM frequencias
+      JOIN alunos ON frequencias.aluno_id = alunos.id
       WHERE 1=1
     `;
     const valores = [];
 
     if (aluno_id) {
       valores.push(aluno_id);
-      query += ` AND notas.aluno_id = $${valores.length}`;
+      query += ` AND frequencias.aluno_id = $${valores.length}`;
     }
-    if (disciplina_id) {
-      valores.push(disciplina_id);
-      query += ` AND notas.disciplina_id = $${valores.length}`;
+    if (data) {
+      valores.push(data);
+      query += ` AND frequencias.data = $${valores.length}`;
     }
-    if (bimestre) {
-      valores.push(bimestre);
-      query += ` AND notas.bimestre = $${valores.length}`;
+    if (turma_id) {
+      valores.push(turma_id);
+      query += ` AND alunos.turma_id = $${valores.length}`;
     }
+
+    query += " ORDER BY frequencias.data DESC";
 
     const resultado = await pool.query(query, valores);
     res.json(resultado.rows);
@@ -34,29 +34,13 @@ export async function listarNotas(req, res, next) {
   }
 }
 
-export async function listarNotaPorId(req, res, next) {
+export async function registrarFrequenciaAluno(req, res, next) {
   try {
-    const { id } = req.params;
-    const resultado = await pool.query("SELECT * FROM notas WHERE id = $1", [id]);
-
-    if (resultado.rows.length === 0) {
-      return res.status(404).json({ erro: "Nota não encontrada" });
-    }
-
-    res.json(resultado.rows[0]);
-  } catch (erro) {
-    next(erro);
-  }
-}
-
-export async function adicionarNota(req, res, next) {
-  try {
-    const { aluno_id, disciplina_id, bimestre, prova_parcial, prova_bimestral } = req.body;
+    const { aluno_id, data, presente } = req.body;
 
     const resultado = await pool.query(
-      `INSERT INTO notas (aluno_id, disciplina_id, bimestre, prova_parcial, prova_bimestral)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [aluno_id, disciplina_id, bimestre, prova_parcial, prova_bimestral]
+      `INSERT INTO frequencias (aluno_id, data, presente) VALUES ($1, $2, $3) RETURNING *`,
+      [aluno_id, data, presente]
     );
 
     res.status(201).json(resultado.rows[0]);
@@ -65,18 +49,48 @@ export async function adicionarNota(req, res, next) {
   }
 }
 
-export async function atualizarNota(req, res, next) {
+export async function registrarFrequenciaTurma(req, res, next) {
+  try {
+    const { turma_id, data, presencas } = req.body;
+
+    if (!Array.isArray(presencas) || presencas.length === 0) {
+      return res.status(400).json({ erro: "Lista de presenças vazia ou inválida" });
+    }
+
+    const turmaExiste = await pool.query("SELECT id FROM turmas WHERE id = $1", [turma_id]);
+
+    if (turmaExiste.rows.length === 0) {
+      return res.status(404).json({ erro: "Turma inexistente" });
+    }
+
+    const inseridos = [];
+
+    for (const item of presencas) {
+      const resultado = await pool.query(
+        `INSERT INTO frequencias (aluno_id, data, presente) VALUES ($1, $2, $3) RETURNING *`,
+        [item.aluno_id, data, item.presente]
+      );
+      inseridos.push(resultado.rows[0]);
+    }
+
+    res.status(201).json(inseridos);
+  } catch (erro) {
+    next(erro);
+  }
+}
+
+export async function atualizarFrequencia(req, res, next) {
   try {
     const { id } = req.params;
-    const { prova_parcial, prova_bimestral } = req.body;
+    const { presente } = req.body;
 
     const resultado = await pool.query(
-      `UPDATE notas SET prova_parcial = $1, prova_bimestral = $2 WHERE id = $3 RETURNING *`,
-      [prova_parcial, prova_bimestral, id]
+      `UPDATE frequencias SET presente = $1 WHERE id = $2 RETURNING *`,
+      [presente, id]
     );
 
     if (resultado.rows.length === 0) {
-      return res.status(404).json({ erro: "Nota não encontrada" });
+      return res.status(404).json({ erro: "Registro de frequência não encontrado" });
     }
 
     res.json(resultado.rows[0]);
@@ -85,16 +99,16 @@ export async function atualizarNota(req, res, next) {
   }
 }
 
-export async function deletarNota(req, res, next) {
+export async function deletarFrequencia(req, res, next) {
   try {
     const { id } = req.params;
-    const resultado = await pool.query("DELETE FROM notas WHERE id = $1 RETURNING *", [id]);
+    const resultado = await pool.query("DELETE FROM frequencias WHERE id = $1 RETURNING *", [id]);
 
     if (resultado.rows.length === 0) {
-      return res.status(404).json({ erro: "Nota não encontrada" });
+      return res.status(404).json({ erro: "Registro de frequência não encontrado" });
     }
 
-    res.json({ mensagem: "Nota removida com sucesso" });
+    res.json({ mensagem: "Registro de frequência removido com sucesso" });
   } catch (erro) {
     next(erro);
   }
