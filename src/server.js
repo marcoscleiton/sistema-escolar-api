@@ -8,6 +8,7 @@ import tratamentoDeErro from "./middlewares/tratamentoDeErros.js";
 import notasRouter from "./routes/notas.routes.js";
 import frequenciasRouter from "./routes/frequencias.routes.js";
 import boletimRouter from "./routes/boletim.routes.js";
+import authrouter from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(professoresDisciplinasRouter);
 app.use(notasRouter);
 app.use(frequenciasRouter);
 app.use(boletimRouter);
+app.use(authrouter);
 
 app.use(tratamentoDeErro);
 
