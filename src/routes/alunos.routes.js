@@ -1,15 +1,16 @@
 import express from "express";
+import { verificarToken } from "../middlewares/autenticacao.js";
 import { atualizarAluno, buscarAluno, criarAluno, deletarAluno, listarAlunos } from "../controllers/alunos.controller.js";
-const router = express.Router();
+const alunosRouter = express.Router();
 
-router.get("/alunos", listarAlunos);
+alunosRouter.get("/alunos", verificarToken, listarAlunos);
 
-router.get("/alunos/:id", buscarAluno);
+alunosRouter.get("/alunos/:id", verificarToken, buscarAluno);
 
-router.post("/alunos", criarAluno);
+alunosRouter.post("/alunos", verificarToken, criarAluno);
 
-router.put("/alunos", atualizarAluno);
+alunosRouter.put("/alunos", verificarToken, atualizarAluno);
 
-router.delete("/alunos/:id", deletarAluno);
+alunosRouter.delete("/alunos/:id",verificarToken, deletarAluno);
 
 export default router;
