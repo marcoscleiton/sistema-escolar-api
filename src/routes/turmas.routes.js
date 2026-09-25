@@ -1,19 +1,20 @@
 import express from "express";
+import { verificarToken } from "../middlewares/autenticacao.js";
 
 import { adicionarTurma, atualizarTurmas, buscarTurma, deletarTurma, listarAlunosDaTurma, listarTurmas } from "../controllers/turmas.controller.js";
-const router = express.Router();
+const turmasRouter = express.Router();
 
-router.get("/turmas", listarTurmas);
+turmasRouter.get("/turmas", verificarToken, listarTurmas);
 
-router.get("/turmas/:id", buscarTurma);
+turmasRouter.get("/turmas/:id", verificarToken, buscarTurma);
 
-router.get("/turmas/:id/alunos", listarAlunosDaTurma);
+turmasRouter.get("/turmas/:id/alunos", verificarToken, listarAlunosDaTurma);
 
-router.post("/turmas", adicionarTurma);
+turmasRouter.post("/turmas", verificarToken, adicionarTurma);
 
-router.put("/turmas/:id", atualizarTurmas);
+turmasRouter.put("/turmas/:id", verificarToken, atualizarTurmas);
 
-router.delete("/turmas/:id", deletarTurma);
+turmasRouter.delete("/turmas/:id", verificarToken, deletarTurma);
 
 
 

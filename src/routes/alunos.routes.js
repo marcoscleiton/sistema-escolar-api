@@ -13,4 +13,4 @@ alunosRouter.put("/alunos", verificarToken, atualizarAluno);
 
 alunosRouter.delete("/alunos/:id",verificarToken, deletarAluno);
 
-export default router;
+export default alunosRouter;
