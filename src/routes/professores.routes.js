@@ -1,12 +1,13 @@
 import express from "express";
+import { verificarToken } from "../middlewares/autenticacao.js";
 import { listarProfessores, listarProfessorPorId, adicionarProfessor, atualizarProfessor, deletarProfessor} from "../controllers/professores.controller.js";
 
 const professorRouter = express.Router();
 
-professorRouter.get("/professores", listarProfessores);
-professorRouter.get("/professores/:id", listarProfessorPorId);
-professorRouter.post("/professores", adicionarProfessor);
-professorRouter.put("/professores/:id", atualizarProfessor);
-professorRouter.delete("/professores/:id", deletarProfessor);
+professorRouter.get("/professores", verificarToken, listarProfessores);
+professorRouter.get("/professores/:id", verificarToken, listarProfessorPorId);
+professorRouter.post("/professores", verificarToken, adicionarProfessor);
+professorRouter.put("/professores/:id", verificarToken, atualizarProfessor);
+professorRouter.delete("/professores/:id", verificarToken, deletarProfessor);
 
 export default professorRouter;

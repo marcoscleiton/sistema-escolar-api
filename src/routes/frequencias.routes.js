@@ -1,18 +1,13 @@
 import express from "express";
-import {
-  listarFrequencias,
-  registrarFrequenciaAluno,
-  registrarFrequenciaTurma,
-  atualizarFrequencia,
-  deletarFrequencia,
-} from "../controllers/frequencias.controller.js";
+import { verificarToken } from "../middlewares/autenticacao.js";
+import {listarFrequencias, registrarFrequenciaAluno, registrarFrequenciaTurma, atualizarFrequencia, deletarFrequencia,} from "../controllers/frequencias.controller.js";
 
 const frequenciasRouter = express.Router();
 
-frequenciasRouter.get("/frequencias", listarFrequencias);
-frequenciasRouter.post("/frequencias", registrarFrequenciaAluno);
-frequenciasRouter.post("/frequencias/turma", registrarFrequenciaTurma);
-frequenciasRouter.put("/frequencias/:id", atualizarFrequencia);
-frequenciasRouter.delete("/frequencias/:id", deletarFrequencia);
+frequenciasRouter.get("/frequencias", verificarToken, listarFrequencias);
+frequenciasRouter.post("/frequencias", verificarToken, registrarFrequenciaAluno);
+frequenciasRouter.post("/frequencias/turma", verificarToken, registrarFrequenciaTurma);
+frequenciasRouter.put("/frequencias/:id", verificarToken, atualizarFrequencia);
+frequenciasRouter.delete("/frequencias/:id", verificarToken, deletarFrequencia);
 
 export default frequenciasRouter;
