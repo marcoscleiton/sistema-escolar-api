@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { registrarUsuario } from "../controllers/auth.controller.js";
 
-const authrouter = express.Router();
+const authrouter = Router();
 
 authrouter.post("/auth/registrar", registrarUsuario);
 

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import pool from "../db/connection.js"; // ajuste igual aos seus outros controllers
+import pool from "../db/connection.js";
 
 async function registrarUsuario(req, res, next) {
   try {
