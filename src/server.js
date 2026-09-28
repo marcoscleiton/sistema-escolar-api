@@ -9,10 +9,15 @@ import notasRouter from "./routes/notas.routes.js";
 import frequenciasRouter from "./routes/frequencias.routes.js";
 import boletimRouter from "./routes/boletim.routes.js";
 import authrouter from "./routes/auth.routes.js";
+import { verificarToken } from "./middlewares/autenticacao.js";
 
 const app = express();
 
 app.use(express.json());
+
+app.use(authrouter);
+
+app.use(verificarToken);
 
 
 app.use(alunosRouter);
@@ -23,7 +28,6 @@ app.use(professoresDisciplinasRouter);
 app.use(notasRouter);
 app.use(frequenciasRouter);
 app.use(boletimRouter);
-app.use(authrouter);
 
 app.use(tratamentoDeErro);
 

@@ -18,4 +18,4 @@ turmasRouter.delete("/turmas/:id", verificarToken, deletarTurma);
 
 
 
-export default router;
+export default turmasRouter;
